@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Generic build targets" default="help" phingVersion="2.5">
+
+    <!-- Fetches and enables common development modules -->
+    <target name="enable-dev-modules" depends="init"
+            description="Fetches and enables common development modules">
+
+        <!-- Use local properties if they exist. -->
+        <if>
+            <available file="${server.docroot}"/>
+            <then>
+                <drush command="make" assume="yes" pipe="true"
+                       bin="${drush.bin}">
+                    <param>${generic.build.script.dir}/dev.make</param>
+                    <param>${server.docroot}</param>
+                </drush>
+                <drush command="pm-enable" assume="yes">
+                    <param>coffee</param>
+                    <param>devel</param>
+                    <param>devel_generate</param>
+                    <param>environment_indicator</param>
+                    <param>stage_file_proxy</param>
+                    <param>simpletest</param>
+                    <param>dblog</param>
+                    <param>syslog</param>
+                </drush>
+                <drush command="pm-disable" assume="yes">
+                    <param>update</param>
+                    <param>overlay</param>
+                    <param>sweaver</param>
+                    <param>advanced_help</param>
+                    <param>dashboard</param>
+                </drush>
+                <phingcall target="cc"/>
+            </then>
+            <else>
+                <echo msg="Cannot enable dev modules because docroot folder is missing"/>
+            </else>
+        </if>
+    </target>
+
+    <target name="dev-settings" depends="init">
+        <!-- dev theme -->
+        <drush command="vset" assume="yes">
+            <param>admin_theme</param>
+            <param>shiny</param>
+            <option name="uri">${build.projects.${project}.uri}</option>
+            <option name="root">${build.projects.${project}.abs.path}</option>
+        </drush>
+
+        <!-- file folders -->
+
+        <if>
+            <not>
+                <available file="${build.projects.${project}.drupal.publ.path}"
+                           type="dir"/>
+            </not>
+            <then>
+                <mkdir dir="${build.projects.${project}.drupal.publ.path}"/>
+            </then>
+        </if>
+        <if>
+            <not>
+                <available file="${build.projects.${project}.drupal.priv.path}"
+                           type="dir"/>
+            </not>
+            <then>
+                <mkdir dir="${build.projects.${project}.drupal.priv.path}"/>
+            </then>
+        </if>
+        <if>
+            <not>
+                <available file="${build.projects.${project}.drupal.temp.path}"
+                           type="dir"/>
+            </not>
+            <then>
+                <mkdir dir="${build.projects.${project}.drupal.temp.path}"/>
+            </then>
+        </if>
+
+        <drush command="vset" assume="yes">
+            <param>file_public_path</param>
+            <param>${build.projects.${project}.drupal.publ.path}</param>
+            <option name="uri">${build.projects.${project}.uri}</option>
+            <option name="root">${build.projects.${project}.abs.path}</option>
+        </drush>
+
+        <drush command="vset" assume="yes">
+            <param>file_temporary_path</param>
+            <param>${build.projects.${project}.drupal.temp.path}</param>
+            <option name="uri">${build.projects.${project}.uri}</option>
+            <option name="root">${build.projects.${project}.abs.path}</option>
+        </drush>
+
+        <drush command="vset" assume="yes">
+            <param>file_private_path</param>
+            <param>${build.projects.${project}.drupal.priv.path}</param>
+            <option name="uri">${build.projects.${project}.uri}</option>
+            <option name="root">${build.projects.${project}.abs.path}</option>
+        </drush>
+
+        <drush command="vset" assume="yes">
+            <param>easy_breadcrumb-disable_drupal_breadcrumb</param>
+            <param>0</param>
+            <option name="uri">${build.projects.${project}.uri}</option>
+            <option name="root">${build.projects.${project}.abs.path}</option>
+        </drush>
+
+        <exec command="chmod -R 777 ${environment.root}/${build.projects.${project}.drupal.publ.path}"
+              escape="false"/>
+        <exec command="chmod -R 777 ${environment.root}/${build.projects.${project}.drupal.priv.path}"
+              escape="false"/>
+        <exec command="chmod -R 777 ${environment.root}/${build.projects.${project}.drupal.temp.path}"
+              escape="false"/>
+
+        <!-- add settings to settings file -->
+        <property name="settings.file"
+                  value="${environment.root}/sites/${build.projects.${project}.name}/settings.php"/>
+        <chmod file="${settings.file}" mode="755" failonerror="true"/>
+
+        <!-- environment indicator -->
+        <append destFile="${settings.file}"
+                text="$conf['environment_indicator_overwrite'] = TRUE;${line.separator}"/>
+        <append destFile="${settings.file}"
+                text="$conf['environment_indicator_overwritten_name'] = '${ei.name}';${line.separator}"/>
+        <append destFile="${settings.file}"
+                text="$conf['environment_indicator_overwritten_color'] = '${ei.color}';${line.separator}"/>
+        <append destFile="${settings.file}"
+                text="$conf['environment_indicator_overwritten_position'] = 'top';${line.separator}"/>
+        <append destFile="${settings.file}"
+                text="$conf['environment_indicator_overwritten_fixed'] = FALSE;${line.separator}"/>
+
+        <!-- stage file proxy -->
+
+        <append destFile="${settings.file}"
+                text="$conf['stage_file_proxy_origin'] = '${build.projects.${project}.sfp.origin}';${line.separator}"/>
+        <append destFile="${settings.file}"
+                text="$conf['stage_file_proxy_origin_dir'] = '${build.projects.${project}.sfp.origin.dir}';${line.separator}"/>
+        <append destFile="${settings.file}"
+                text="error_reporting(-1);${line.separator}$conf['error_level'] = 2;${line.separator}ini_set('display_errors', TRUE);${line.separator}ini_set('display_startup_errors', TRUE);${line.separator}"/>
+        <chmod file="${settings.file}" mode="755" failonerror="true"/>
+
+    </target>
+
+    <!-- clear cache -->
+    <target name="cc" depends="init">
+        <drush command="cc">
+            <param>all</param>
+        </drush>
+    </target>
+
+</project>
