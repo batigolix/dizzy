@@ -2,20 +2,16 @@
 <project name="Generic build targets" default="help" phingVersion="2.5">
 
     <!-- Does all the dev settings -->
-    <target name="set-dev" description="Does all the dev settings"
-            depends="enable-dev-modules, apply-dev-settings, create-aliases-file">
+    <target name="set-dev" description="Does all the dev settings" depends="enable-dev-modules, apply-dev-settings, create-aliases-file">
         <echo msg="Doing all the dev settings"/>
     </target>
 
     <!-- Fetches and enables common development modules -->
-    <target name="enable-dev-modules" depends="init"
-            description="Fetches and enables common development modules">
-
+    <target name="enable-dev-modules" depends="init" description="Fetches and enables common development modules">
         <if>
             <available file="${server.docroot}"/>
             <then>
-                <drush command="make" assume="yes" pipe="true"
-                       bin="${drush.bin}">
+                <drush command="make" assume="yes" pipe="true" bin="${drush.bin}">
                     <param>${generic.build.script.dir}/dev.make</param>
                     <param>${server.docroot}</param>
                     <option name="no-core"/>
@@ -163,5 +159,12 @@
         </if>
     </target>
 
+    <!-- Devs it -->
+    <target name="dev" description="Devs it" depends="init">
+        <phingcall target="fetch-multisite"/>
+        <phingcall target="make-all"/>
+        <phingcall target="create-files-folder"/>
+        <phingcall target="symlink-all"/>
+    </target>
 
 </project>
