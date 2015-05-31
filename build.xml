@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Generic build targets" default="help" phingVersion="2.5">
 
-    <!-- Does all the dev settings -->
-    <target name="set-dev" description="Does all the dev settings" depends="enable-dev-modules, apply-dev-settings, create-aliases-file">
-        <echo msg="Doing all the dev settings"/>
-    </target>
-
     <!-- Fetches and enables common development modules -->
     <target name="enable-dev-modules" depends="init" description="Fetches and enables common development modules">
         <if>
-            <available file="${server.docroot}"/>
+            <available file="${build.dir}"/>
             <then>
-                <drush command="make" assume="yes" pipe="true" bin="${drush.bin}">
-                    <param>${generic.build.script.dir}/dev.make</param>
-                    <param>${server.docroot}</param>
-                    <option name="no-core"/>
+                <drush command="make" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
+                    <param>${additional.build.script.dir}/dev.make</param>
+                    <param>${build.dir}</param>
+                    <option name="concurrency">10</option>
+                    <option name="no-patch-txt"></option>
+                    <option name="no-core"></option>
+                    <option name="contrib-destination">${drupal.rel.site.dir}</option>
                 </drush>
-                <drush command="pm-enable" assume="yes">
+                <drush command="pm-enable" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
                     <param>coffee</param>
                     <param>devel</param>
                     <param>devel_generate</param>
@@ -26,7 +24,7 @@
                     <param>dblog</param>
                     <param>syslog</param>
                 </drush>
-                <drush command="pm-disable" assume="yes">
+                <drush command="pm-disable" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
                     <param>update</param>
                     <param>overlay</param>
                     <param>sweaver</param>
@@ -43,7 +41,7 @@
 
     <target name="apply-dev-settings" depends="init">
         <!-- dev theme -->
-        <drush command="vset" assume="yes">
+        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
             <param>admin_theme</param>
             <param>shiny</param>
         </drush>
@@ -75,36 +73,36 @@
             </then>
         </if>
 
-        <drush command="vset" assume="yes">
+        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
             <param>file_public_path</param>
             <param>${drupal.publ.path}</param>
         </drush>
 
-        <drush command="vset" assume="yes">
+        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
             <param>file_temporary_path</param>
             <param>${drupal.temp.path}</param>
         </drush>
 
-        <drush command="vset" assume="yes">
+        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
             <param>file_private_path</param>
             <param>${drupal.priv.path}</param>
         </drush>
 
-        <drush command="vset" assume="yes">
+        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
             <param>easy_breadcrumb-disable_drupal_breadcrumb</param>
             <param>FALSE</param>
         </drush>
 
-        <exec command="chmod -R 777 ${server.docroot}/${drupal.publ.path}"
+        <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.publ.path}"
               escape="false"/>
-        <exec command="chmod -R 777 ${server.docroot}/${drupal.priv.path}"
+        <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.priv.path}"
               escape="false"/>
-        <exec command="chmod -R 777 ${server.docroot}/${drupal.temp.path}"
+        <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.temp.path}"
               escape="false"/>
 
         <!-- add settings to settings file -->
         <property name="settings.file"
-                  value="${drupal.settings.dir}/settings.php"/>
+                  value="${build.dir}/sites/default/settings.php"/>
         <chmod file="${settings.file}" mode="755" failonerror="true"/>
 
         <!-- environment indicator -->
@@ -133,7 +131,7 @@
 
     <!-- clear cache -->
     <target name="cc" depends="init">
-        <drush command="cc">
+        <drush command="cc" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
             <param>all</param>
         </drush>
     </target>
@@ -143,7 +141,7 @@
             description="Creates a drush aliases file"
             depends="">
         <property name="aliases.file"
-                  value="${project.path}/aliases.drushrc.php"/>
+                  value="${project.root}/aliases.drushrc.php"/>
         <if>
             <not>
                 <available file="${aliases.file}"/>
@@ -154,17 +152,17 @@
                 <append destFile="${aliases.file}"
                         text="&lt;&#63;php ${line.separator}"/>
                 <append destFile="${aliases.file}"
-                        text="$aliases['${project.alias}'] = array(${line.separator}  'parent' => '${project.alias.parent}',${line.separator}  'uri' => '${project.uri}',${line.separator}  'root' => '${project.root}',${line.separator}  'path-aliases' => array(${line.separator}    '%files' => '${project.files.folder}',${line.separator}  ),${line.separator});${line.separator}"/>
+                        text="$aliases['${project.alias}'] = array(${line.separator}  'parent' => '${project.alias.parent}',${line.separator}  'uri' => '${project.uri}',${line.separator}  'root' => '${project.root}/${build.dir}',${line.separator}  'path-aliases' => array(${line.separator}    '%files' => '${project.files.folder}',${line.separator}  ),${line.separator});${line.separator}"/>
             </then>
         </if>
     </target>
 
-    <!-- Devs it -->
-    <target name="dev" description="Devs it" depends="init">
-        <phingcall target="fetch-multisite"/>
-        <phingcall target="make-all"/>
-        <phingcall target="create-files-folder"/>
-        <phingcall target="symlink-all"/>
+    <!-- Does all the dev settings -->
+    <target name="set-dev" description="Does all the dev settings" depends="init">
+        <echo msg="Does all the dev settings" />
+        <phingcall target="enable-dev-modules"/>
+        <phingcall target="apply-dev-settings"/>
+        <phingcall target="create-aliases-file"/>
     </target>
 
 </project>
