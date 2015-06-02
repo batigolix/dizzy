@@ -50,26 +50,26 @@
 
         <if>
             <not>
-                <available file="${drupal.publ.path}" type="dir"/>
+                <available file="${build.dir}/${drupal.publ.path}" type="dir"/>
             </not>
             <then>
-                <mkdir dir="${drupal.publ.path}"/>
+                <mkdir dir="${build.dir}/${drupal.publ.path}"/>
             </then>
         </if>
         <if>
             <not>
-                <available file="${drupal.priv.path}" type="dir"/>
+                <available file="${build.dir}/${drupal.priv.path}" type="dir"/>
             </not>
             <then>
-                <mkdir dir="${drupal.priv.path}"/>
+                <mkdir dir="${build.dir}/${drupal.priv.path}"/>
             </then>
         </if>
         <if>
             <not>
-                <available file="${drupal.temp.path}" type="dir"/>
+                <available file="${build.dir}/${drupal.temp.path}" type="dir"/>
             </not>
             <then>
-                <mkdir dir="${drupal.temp.path}"/>
+                <mkdir dir="${build.dir}/${drupal.temp.path}"/>
             </then>
         </if>
 
@@ -126,6 +126,18 @@
         <append destFile="${settings.file}"
                 text="error_reporting(-1);${line.separator}$conf['error_level'] = 2;${line.separator}ini_set('display_errors', TRUE);${line.separator}ini_set('display_startup_errors', TRUE);${line.separator}"/>
         <chmod file="${settings.file}" mode="755" failonerror="true"/>
+
+        <!-- simpletest folder -->
+        <if>
+            <not>
+                <available file="${build.dir}/${drupal.publ.path}/simpletest" type="dir"/>
+            </not>
+            <then>
+                <mkdir dir="${build.dir}/${drupal.publ.path}/simpletest"/>
+            </then>
+            <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.publ.path}/simpletest"
+                  escape="false"/>
+        </if>
 
     </target>
 
