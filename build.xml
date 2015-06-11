@@ -164,7 +164,7 @@
                 <append destFile="${aliases.file}"
                         text="&lt;&#63;php ${line.separator}"/>
                 <append destFile="${aliases.file}"
-                        text="$aliases['${project.alias}'] = array(${line.separator}  'parent' => '${project.alias.parent}',${line.separator}  'uri' => '${project.uri}',${line.separator}  'root' => '${project.root}/${build.dir}',${line.separator}  'path-aliases' => array(${line.separator}    '%files' => '${project.files.folder}',${line.separator}  ),${line.separator});${line.separator}"/>
+                        text="$aliases['${project.alias}'] = array(${line.separator}  'uri' => '${project.uri}',${line.separator}  'root' => '${project.root}/${build.dir}',${line.separator}  'path-aliases' => array(${line.separator}    '%files' => '${project.files.folder}',${line.separator}  ),${line.separator});${line.separator}"/>
             </then>
         </if>
     </target>
