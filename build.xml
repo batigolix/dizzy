@@ -127,18 +127,6 @@
                 text="error_reporting(-1);${line.separator}$conf['error_level'] = 2;${line.separator}ini_set('display_errors', TRUE);${line.separator}ini_set('display_startup_errors', TRUE);${line.separator}"/>
         <chmod file="${settings.file}" mode="755" failonerror="true"/>
 
-        <!-- simpletest folder -->
-        <if>
-            <not>
-                <available file="${build.dir}/${drupal.publ.path}/simpletest" type="dir"/>
-            </not>
-            <then>
-                <mkdir dir="${build.dir}/${drupal.publ.path}/simpletest"/>
-            </then>
-            <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.publ.path}/simpletest"
-                  escape="false"/>
-        </if>
-
     </target>
 
     <!-- clear cache -->
