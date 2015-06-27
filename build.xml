@@ -41,10 +41,10 @@
 
     <target name="apply-dev-settings" depends="init">
         <!-- dev theme -->
-        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
-            <param>admin_theme</param>
-            <param>shiny</param>
-        </drush>
+        <phingcall target="vset">
+            <property name="varname" value="admin_theme" />
+            <property name="varvalue" value="shiny" />
+        </phingcall>
 
         <!-- file folders -->
 
@@ -73,25 +73,45 @@
             </then>
         </if>
 
-        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
-            <param>file_public_path</param>
-            <param>${drupal.publ.path}</param>
-        </drush>
+        <phingcall target="vset">
+            <property name="varname" value="file_public_path" />
+            <property name="varvalue" value="${drupal.publ.path}" />
+        </phingcall>
 
-        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
-            <param>file_temporary_path</param>
-            <param>${drupal.temp.path}</param>
-        </drush>
+        <phingcall target="vset">
+            <property name="varname" value="file_temporary_path" />
+            <property name="varvalue" value="${drupal.temp.path}" />
+        </phingcall>
 
-        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
-            <param>file_private_path</param>
-            <param>${drupal.priv.path}</param>
-        </drush>
+        <phingcall target="vset">
+            <property name="varname" value="file_private_path" />
+            <property name="varvalue" value="${drupal.priv.path}" />
+        </phingcall>
 
-        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
-            <param>easy_breadcrumb-disable_drupal_breadcrumb</param>
-            <param>FALSE</param>
-        </drush>
+        <phingcall target="vset">
+            <property name="varname" value="easy_breadcrumb-disable_drupal_breadcrumb" />
+            <property name="varvalue" value="0" />
+        </phingcall>
+
+        <phingcall target="vset">
+            <property name="varname" value="cache" />
+            <property name="varvalue" value="0" />
+        </phingcall>
+
+        <phingcall target="vset">
+            <property name="varname" value="block_cache" />
+            <property name="varvalue" value="0" />
+        </phingcall>
+
+        <phingcall target="vset">
+            <property name="varname" value="preprocess_css" />
+            <property name="varvalue" value="0" />
+        </phingcall>
+
+        <phingcall target="vset">
+            <property name="varname" value="preprocess_js" />
+            <property name="varvalue" value="0" />
+        </phingcall>
 
         <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.publ.path}"
               escape="false"/>
@@ -127,17 +147,6 @@
                 text="error_reporting(-1);${line.separator}$conf['error_level'] = 2;${line.separator}ini_set('display_errors', TRUE);${line.separator}ini_set('display_startup_errors', TRUE);${line.separator}"/>
         <chmod file="${settings.file}" mode="755" failonerror="true"/>
 
-        <!-- simpletest folder -->
-        <if>
-            <not>
-                <available file="${build.dir}/${drupal.publ.path}/simpletest" type="dir"/>
-            </not>
-            <then>
-                <mkdir dir="${build.dir}/${drupal.publ.path}/simpletest"/>
-            </then>
-            <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.publ.path}/simpletest"
-                  escape="false"/>
-        </if>
 
     </target>
 
@@ -145,6 +154,15 @@
     <target name="cc" depends="init">
         <drush command="cc" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
             <param>all</param>
+        </drush>
+    </target>
+
+    <!-- set variable using drush -->
+    <target name="vset" depends="init">
+        <echo msg="Setting Drupal variable ${varname} to ${varvalue}" />
+        <drush command="vset" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
+            <param>${varname}</param>
+            <param>${varvalue}</param>
         </drush>
     </target>
 
