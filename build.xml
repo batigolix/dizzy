@@ -146,8 +146,6 @@
         <append destFile="${settings.file}"
                 text="error_reporting(-1);${line.separator}$conf['error_level'] = 2;${line.separator}ini_set('display_errors', TRUE);${line.separator}ini_set('display_startup_errors', TRUE);${line.separator}"/>
         <chmod file="${settings.file}" mode="755" failonerror="true"/>
-
-
     </target>
 
     <!-- clear cache -->
