@@ -20,8 +20,8 @@ projects[devel][subdir] = "development"
 projects[environment_indicator][type] = "module"
 projects[environment_indicator][subdir] = "development"
   
-projects[coffee][type] = "module"
-projects[coffee][subdir] = "development"
+;projects[coffee][type] = "module"
+;projects[coffee][subdir] = "development"
 
 projects[stage_file_proxy][type] = "module"
 projects[stage_file_proxy][subdir] = "development"

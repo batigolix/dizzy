@@ -15,7 +15,7 @@
                     <option name="contrib-destination">${drupal.rel.site.dir}</option>
                 </drush>
                 <drush command="pm-enable" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
-                    <param>coffee</param>
+                    <param>toolbar</param>
                     <param>devel</param>
                     <param>devel_generate</param>
                     <param>environment_indicator</param>
@@ -121,9 +121,10 @@
               escape="false"/>
 
         <!-- add settings to settings file -->
-        <property name="settings.file"
-                  value="${build.dir}/sites/default/settings.php"/>
-        <chmod file="${settings.file}" mode="755" failonerror="true"/>
+        <property name="default.dir" value="${project.root}/${build.dir}/sites/default"/>
+        <property name="settings.file" value="${default.dir}/settings.php"/>
+        <exec command="chmod a+w ${settings.file}" escape="false"/>
+        <exec command="chmod a+w ${default.dir}" escape="false"/>
 
         <!-- environment indicator -->
         <append destFile="${settings.file}"
@@ -145,7 +146,6 @@
                 text="$conf['stage_file_proxy_origin_dir'] = '${sfp.origin.dir}';${line.separator}"/>
         <append destFile="${settings.file}"
                 text="error_reporting(-1);${line.separator}$conf['error_level'] = 2;${line.separator}ini_set('display_errors', TRUE);${line.separator}ini_set('display_startup_errors', TRUE);${line.separator}"/>
-        <chmod file="${settings.file}" mode="755" failonerror="true"/>
     </target>
 
     <!-- clear cache -->
