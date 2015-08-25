@@ -23,9 +23,8 @@
                     <param>simpletest</param>
                     <param>dblog</param>
                     <param>syslog</param>
-                    <param>toolbar</param>
-                    <param>shortcut</param>
                     <param>field_ui</param>
+                    <param>views_ui</param>
                 </drush>
                 <drush command="pm-disable" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
                     <param>update</param>
