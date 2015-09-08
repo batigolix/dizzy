@@ -1,4 +1,4 @@
-# Dizzy more build targets for local development
+# Dizzy: more build targets for local development
 
 Provides:
 * phing build.xml script with additional targets
