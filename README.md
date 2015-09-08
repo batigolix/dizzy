@@ -1,5 +1,7 @@
 # Dizzy: more build targets for local development
 
+![Dizzy from Bob the Builder](Dizzy.jpg)
+
 Provides:
 * phing build.xml script with additional targets
 * dev.make file with generic contrib modules, themes and libraries for local development
