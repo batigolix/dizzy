@@ -16,7 +16,7 @@ Applies a bunch of Drupal and PHP development settings such as full error loggin
 
 Creates a drush site aliases file in the root of the project. This alias works anywhere inside the (git) project folder if you have added snippet below to ~/.drush/drushrc.php
 
-If you do not have ~/.drush/drushrc.php then locate example.drushrc.php and copy & rename it. See http://drush.readthedocs.org/en/master/examples
+If you do not have ~/.drush/drushrc.php then look for the file example.drushrc.php (`locate example.drushrc.php`) and copy & rename it to `~/.drush/drushrc.php` .  See http://drush.readthedocs.org/en/master/examples
 
 ```
 exec('git rev-parse --show-toplevel 2> /dev/null', $repo);
