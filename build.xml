@@ -208,4 +208,29 @@
         <phingcall target="create-aliases-file"/>
     </target>
 
+    <!-- Install drupal. -->
+    <target name="install-drupal-brutally" description="Runs the install and annihilates everything that gets in its way" depends="init">
+      <property name="settings.folder" value="${build.dir}/sites/default"/>
+      <property name="settings.file" value="${settings.folder}/settings.php"/>
+      <exec command="chmod -R 777 ${settings.folder}" escape="false"/>
+        <if>
+                <available file="${settings.file}" type="file"/>
+            <then>
+              <exec command="mv ${settings.file} ${settings.file}-old" escape="false"/>
+            </then>
+</if>
+
+        <exec command="yes | mysqladmin -u ${drupal.db.user} -p${drupal.db.password} drop '${drupal.db.name}'" logoutput="true" />
+
+        <drush command="site-install" assume="yes" root="${project.root}/${build.dir}" bin="${drush.bin}" verbose="${drush.verbose}">
+            <option name="db-url" value="${drupal.db.url}"/>
+            <option name="site-name" value="${project.name}"/>
+            <option name="account-name" value="${drupal.admin.username}"/>
+            <option name="account-pass" value="${drupal.admin.password}"/>
+            <option name="account-mail" value="${drupal.admin.email}"/>
+            <param>${drupal.profile}</param>
+        </drush>
+    </target>
+
+
 </project>
