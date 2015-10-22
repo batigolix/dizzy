@@ -6,6 +6,9 @@
         <if>
             <available file="${build.dir}"/>
             <then>
+                <drush command="php-eval" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
+                    <param>module_disable(array('apachesolr','apachesolr_search'), FALSE)</param>
+                </drush>
                 <drush command="make" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
                     <param>${additional.build.script.dir}/dev.make</param>
                     <param>${build.dir}</param>
@@ -33,6 +36,8 @@
                     <param>dashboard</param>
                     <param>toolbar</param>
                 </drush>
+
+
                 <phingcall target="cc"/>
             </then>
             <else>
@@ -113,6 +118,16 @@
         <phingcall target="vset">
             <property name="varname" value="preprocess_js" />
             <property name="varvalue" value="0" />
+        </phingcall>
+
+        <phingcall target="vset">
+            <property name="varname" value="node_admin_theme" />
+            <property name="varvalue" value="1" />
+        </phingcall>
+
+        <phingcall target="vset">
+            <property name="varname" value="theme_debug" />
+            <property name="varvalue" value="1" />
         </phingcall>
 
         <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.publ.path}"
