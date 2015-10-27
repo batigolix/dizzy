@@ -6,9 +6,6 @@
         <if>
             <available file="${build.dir}"/>
             <then>
-                <drush command="php-eval" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
-                    <param>module_disable(array('apachesolr','apachesolr_search'), FALSE)</param>
-                </drush>
                 <drush command="make" assume="yes" bin="${drush.bin}" pipe="yes" verbose="${drush.verbose}" root="${project.root}/${build.dir}">
                     <param>${additional.build.script.dir}/dev.make</param>
                     <param>${build.dir}</param>
