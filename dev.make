@@ -32,8 +32,16 @@ projects[simplehtmldom][subdir] = "development"
 projects[examples][type] = "module"
 projects[examples][subdir] = "development"
 
+; muck contains useful drupal dev stuff
+projects[muck][type] = "module"
+projects[muck][subdir] = "development"
+projects[muck][download][type] = "git"
+projects[muck][download][url] = "https://github.com/batigolix/muck.git"
+
 ; Themes
 ; --------
 ; Contrib Drupal themes
 
 projects[shiny][type] = "theme"
+
+
