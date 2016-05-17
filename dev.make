@@ -32,6 +32,12 @@ projects[simplehtmldom][subdir] = "development"
 projects[examples][type] = "module"
 projects[examples][subdir] = "development"
 
+projects[maillog][type] = "module"
+projects[maillog][subdir] = "development"
+
+projects[xhprof][type] = "module"
+projects[xhprof][subdir] = "development"
+
 ; muck contains useful drupal dev stuff
 projects[muck][type] = "module"
 projects[muck][subdir] = "development"
