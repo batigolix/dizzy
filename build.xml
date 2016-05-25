@@ -101,11 +101,6 @@
         </phingcall>
 
         <phingcall target="vset">
-            <property name="varname" value="cache" />
-            <property name="varvalue" value="0" />
-        </phingcall>
-
-        <phingcall target="vset">
             <property name="varname" value="block_cache" />
             <property name="varvalue" value="0" />
         </phingcall>
