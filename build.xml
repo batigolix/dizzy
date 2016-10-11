@@ -124,6 +124,11 @@
             <property name="varvalue" value="1" />
         </phingcall>
 
+        <phingcall target="vset">
+            <property name="varname" value="fpfis_twitter_screen_name" />
+            <property name="varvalue" value="pontifex" />
+        </phingcall>
+
         <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.publ.path}"
               escape="false"/>
         <exec command="chmod -R 777 ${project.root}/${build.dir}/${drupal.priv.path}"
