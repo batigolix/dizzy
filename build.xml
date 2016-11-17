@@ -247,4 +247,12 @@
     </target>
 
 
+    <!--
+        Starts SASS with predefined folder location
+        The folders needs to be in place before running watch command
+    -->
+    <target name="sass" description="Starts Watch command for SASS" >
+        <exec command="gnome-terminal -e 'sass --watch ${project.root}${sass.folder}style.sass:${project.root}${css.folder}style.css --style expanded' " logoutput="true" />
+    </target>
+
 </project>
