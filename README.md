@@ -1,5 +1,7 @@
 # Dizzy: more build targets for local development
 
+test
+
 ![Dizzy from Bob the Builder](Dizzy.jpg)
 
 Provides:
